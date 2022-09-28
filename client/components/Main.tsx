@@ -36,8 +36,8 @@ const style = {
   }
 const Main = () => {
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = () => {
+        // e.preventDefault()
     }
 
   return (
@@ -76,7 +76,7 @@ const Main = () => {
         />
         <div className={style.currencySelector}></div>
       </div>
-      <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
+      <div  className={style.confirmButton}>
         Confirm
       </div>
     </div>
