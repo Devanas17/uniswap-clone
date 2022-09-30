@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {ethers} from "ethers"
+import {contractABI, contractAddress} from "../lib/constants"
+// import 
 
 export const TransactionContext = React.createContext();
 
@@ -62,6 +64,11 @@ export const TransactionProvider = ({children}) => {
         }
     }
 
+      /**
+   * Executes a transaction
+   * @param {*} metamask Injected MetaMask code from the browser
+   * @param {string} currentAccount Current user's address
+   */
     const sendTransaction = async (
       metamask = eth,
       connectedAccount = currentAccount,
@@ -69,6 +76,7 @@ export const TransactionProvider = ({children}) => {
       try {
         if (!metamask) return alert('Please install metamask ')
         const { addressTo, amount } = formData
+        const transactionContract = getEthereumContract()
   
         const parsedAmount = ethers.utils.parseEther(amount)
   
@@ -107,7 +115,6 @@ export const TransactionProvider = ({children}) => {
         console.log(error)
       }
     }
-  
    
 
     const handleChange = (e, name) => {
