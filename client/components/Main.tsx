@@ -4,7 +4,13 @@ import { RiSettings3Fill } from 'react-icons/ri'
 import { AiOutlineDown } from 'react-icons/ai'
 import ethLogo from '../assets/eth.png'
 import { TransactionContext } from '../context/TransactionContext'
-import { useRouter } from 'next/router'
+import  { useRouter } from 'next/router'
+import Modal from "react-modal";
+import TransactionLoader from './TransactionLoader'
+
+
+Modal.setAppElement('#__next')
+
 
 const style = {
     wrapper: `w-screen flex items-center justify-center mt-14`,
@@ -39,7 +45,7 @@ const Main = () => {
 
   const { formData, handleChange, sendTransaction } =
   useContext(TransactionContext)
-// const router = useRouter()
+const router = useRouter()
 
 const handleSubmit = async (e: any) => {
   const { addressTo, amount } = formData
@@ -91,11 +97,11 @@ const handleSubmit = async (e: any) => {
       </div>
     </div>
 
-    {/* <Modal isOpen={!!router.query.loading} style={customStyles}>
+    <Modal isOpen={!!router.query.loading} style={customStyles}>
       <TransactionLoader />
-    </Modal> */}
+    </Modal>
   </div>
   )
 }
 
-export default Main
+export default Main 
