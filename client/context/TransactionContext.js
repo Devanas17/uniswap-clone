@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {ethers} from "ethers"
 import {contractABI, contractAddress} from "../lib/constants"
-// import 
+import {client} from "../lib/sanityClient"
 
 export const TransactionContext = React.createContext();
 
@@ -47,6 +47,24 @@ export const TransactionProvider = ({children}) => {
     }
     
     }
+
+
+    /**
+   * Create user profile in Sanity
+   */
+  useEffect(() => {
+    if (!currentAccount) return
+    ;(async () => {
+      const userDoc = {
+        _type: 'users',
+        _id: currentAccount,
+        userName: 'Unnamed',
+        address: currentAccount,
+      }
+
+      await client.createIfNotExists(userDoc)
+    })()
+  }, [currentAccount])
 
     const checkIfWalletIsConnected = async (metamask = eth) => {
         try {
@@ -116,6 +134,40 @@ export const TransactionProvider = ({children}) => {
       }
     }
    
+    // Save Transaction to Sanity DB
+    const saveTransaction = async (
+      txHash,
+      amount,
+      fromAddress = currentAccount,
+      toAddress,
+    ) => {
+      const txDoc = {
+        _type: 'transactions',
+        _id: txHash,
+        fromAddress: fromAddress,
+        toAddress: toAddress,
+        timestamp: new Date(Date.now()).toISOString(),
+        txHash: txHash,
+        amount: parseFloat(amount),
+      }
+  
+      await client.createIfNotExists(txDoc)
+  
+      await client
+        .patch(currentAccount)
+        .setIfMissing({ transactions: [] })
+        .insert('after', 'transactions[-1]', [
+          {
+            _key: txHash,
+            _ref: txHash,
+            _type: 'reference',
+          },
+        ])
+        .commit()
+  
+      return
+    }
+
 
     const handleChange = (e, name) => {
         setFormData(prevState => ({...prevState, [name]: e.target.value}))

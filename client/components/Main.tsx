@@ -39,7 +39,7 @@ const Main = () => {
 
   const { formData, handleChange, sendTransaction } =
   useContext(TransactionContext)
-const router = useRouter()
+// const router = useRouter()
 
 const handleSubmit = async (e: any) => {
   const { addressTo, amount } = formData
